@@ -21,4 +21,8 @@ const productSchema = new Schema<Product>({
   inStock: { type: Boolean, required: true, default: true },
 });
 
+// productSchema.pre('find', function (req, res) {
+//   this.find({isStock: {$ne : false}})
+// })
+
 export const ProductModel = model<Product>('Product', productSchema);
