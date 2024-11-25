@@ -1,4 +1,4 @@
-# stationery-shop-application
+# store_stationery_project
 
 The Stationery Shop application is a comprehensive web application built using Express and TypeScript to manage the operations of a stationery shop. It allows users to manage products, place orders, and track the total revenue from all orders. The application integrates with MongoDB using Mongoose for data storage and schema validation.
 
