@@ -1,8 +1,17 @@
 import { Router } from 'express';
-import creatProduct from './product.controller';
+import { ProductController } from './product.controller';
 
 const routes = Router();
 
-routes.route('/').post(creatProduct).get();
+routes
+  .route('/')
+  .post(ProductController.createProduct)
+  .get(ProductController.getAllProduct);
+
+routes
+  .route('/:productId')
+  .get(ProductController.getSingleProduct)
+  .put(ProductController.updateProduct)
+  .delete(ProductController.deleteProduct);
 
 export default routes;

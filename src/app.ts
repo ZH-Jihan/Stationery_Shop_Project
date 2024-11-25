@@ -1,6 +1,7 @@
 import cors from 'cors';
 import express from 'express';
-import routes from './app/modules/product/product.router';
+import orderRoutes from './app/modules/order/order.router';
+import productRoutes from './app/modules/product/product.router';
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.get('/', (req, res) => {
 // app.use(express.urlencoded({ extended: true, limit: '16kb' }));
 // app.use(express.static('public'));
 
-app.use('/api/products', routes);
+app.use('/api/products', productRoutes);
+app.use('/api/orders', orderRoutes);
 
 export default app;

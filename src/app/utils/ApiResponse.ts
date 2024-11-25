@@ -1,7 +1,7 @@
 class ApiResponse {
   statusCode: number;
-  message: string;
   success: boolean;
+  message: string;
   data?: any;
 
   constructor(statusCode: number, data: any, massage: string, success = true) {
