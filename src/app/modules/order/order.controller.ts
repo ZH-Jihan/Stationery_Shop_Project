@@ -1,19 +1,34 @@
 import { Request, Response } from 'express';
-import ApiResponse from '../../utils/ApiResponse';
+import ApiError from '../../utils/ApiError';
 import { OrderServices } from './order.services';
+import { OrderValidationSchema } from './order.validation';
 
 const createOrderInDb = async (req: Request, res: Response) => {
   const data = req.body;
+
   try {
-    const newOrder = await OrderServices.createOrderDB(data);
-    res
-      .status(200)
-      .json(new ApiResponse(200, newOrder, 'Order created successfully'));
+    const validateOrder = OrderValidationSchema.parse(data);
+    const newOrder = await OrderServices.createOrderDB(validateOrder);
+    res.json(newOrder);
   } catch (error) {
-    console.log(error);
+    res
+      .status(400)
+      .json(new ApiError('Something went wrong', false, error, error?.stack));
+  }
+};
+
+const calculateOrderRevenue = async (req: Request, res: Response) => {
+  try {
+    const result = await OrderServices.orderRevenueCalculat();
+    res.json(result);
+  } catch (error) {
+    res
+      .status(400)
+      .json(new ApiError('Something went wrong', false, error, error?.stack));
   }
 };
 
 export const OrderController = {
   createOrderInDb,
+  calculateOrderRevenue,
 };

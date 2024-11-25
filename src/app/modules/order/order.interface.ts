@@ -1,8 +1,6 @@
-import { ObjectId } from 'mongoose';
-
 export type Order = {
   email: string;
-  product: ObjectId;
+  product: string;
   quantity: number;
   totalPrice: number;
 };

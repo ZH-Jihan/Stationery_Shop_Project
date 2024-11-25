@@ -1,3 +1,4 @@
+import ApiResponse from '../../utils/ApiResponse';
 import { Product } from './product.interface';
 import { ProductModel } from './product.model';
 
@@ -14,12 +15,8 @@ const getProductBySearchTerm = async (queryParam: string) => {
       { category: queryParam },
     ],
   };
-  try {
-    const searchingProduct = await ProductModel.find(searchQuery);
-    return searchingProduct;
-  } catch (error) {
-    console.log(error);
-  }
+  const searchingProduct = await ProductModel.find(searchQuery);
+  return searchingProduct;
 };
 
 const getProductById = async (id: string) => {
@@ -50,7 +47,10 @@ const deleteProductByIdDB = async (id: string) => {
     { _id: id },
     { isDeleted: true },
   );
-  return {};
+  if (deleteProduct2) {
+    return new ApiResponse(200, {}, 'Product deleted successfully');
+  }
+  return new ApiResponse(404, {}, 'Product Not Found');
 };
 
 export const ProductService = {

@@ -1,14 +1,16 @@
 import { Request, Response } from 'express';
+import ApiError from '../../utils/ApiError';
 import ApiResponse from '../../utils/ApiResponse';
 import { ProductService } from './product.services';
+import ProductValidationSchema from './product.validation';
 
 const createProduct = async (req: Request, res: Response) => {
   try {
     const product = req.body;
-    if (!product.name || !product.price) {
-      res.status(400).json(new ApiResponse(400, null, 'Invalid product data'));
-    }
-    const createdProduct = await ProductService.createProductDB(product);
+    const validateProduct = ProductValidationSchema.parse(product);
+
+    const createdProduct =
+      await ProductService.createProductDB(validateProduct);
 
     res
       .status(200)
@@ -16,14 +18,15 @@ const createProduct = async (req: Request, res: Response) => {
         new ApiResponse(200, createdProduct, 'Product created successfully'),
       );
   } catch (error) {
-    console.log(error);
+    res
+      .status(400)
+      .json(new ApiError('Something went wrong', false, error, error?.stack));
   }
 };
 
 const getAllProduct = async (req: Request, res: Response) => {
-  const { searchTerm } = req.query;
-
   try {
+    const { searchTerm } = req.query;
     let result;
     if (searchTerm) {
       result = await ProductService.getProductBySearchTerm(
@@ -36,13 +39,15 @@ const getAllProduct = async (req: Request, res: Response) => {
       .status(200)
       .json(new ApiResponse(200, result, 'Product retrieved successfully'));
   } catch (error) {
-    console.log(error);
+    res
+      .status(400)
+      .json(new ApiError('Something went wrong', false, error, error?.stack));
   }
 };
 
 const getSingleProduct = async (req: Request, res: Response) => {
-  const { productId: id } = req.params;
   try {
+    const { productId: id } = req.params;
     const singleProduct = await ProductService.getProductById(id);
     if (!singleProduct) {
       res
@@ -55,7 +60,9 @@ const getSingleProduct = async (req: Request, res: Response) => {
         new ApiResponse(200, singleProduct, 'Product retrieved successfully'),
       );
   } catch (error) {
-    console.log(error);
+    res
+      .status(400)
+      .json(new ApiError('Something went wrong', false, error, error?.stack));
   }
 };
 
@@ -68,7 +75,9 @@ const updateProduct = async (req: Request, res: Response) => {
       .status(200)
       .json(new ApiResponse(200, product, 'Product updated successfully'));
   } catch (error) {
-    console.log(error);
+    res
+      .status(400)
+      .json(new ApiError('Something went wrong', false, error, error?.stack));
   }
 };
 
@@ -76,11 +85,11 @@ const deleteProduct = async (req: Request, res: Response) => {
   const { productId: id } = req.params;
   try {
     const deleted = await ProductService.deleteProductByIdDB(id);
-    res
-      .status(200)
-      .json(new ApiResponse(200, deleted, 'Product deleted successfully'));
+    res.json(deleted);
   } catch (error) {
-    console.log(error);
+    res
+      .status(400)
+      .json(new ApiError('Something went wrong', false, error, error?.stack));
   }
 };
 
