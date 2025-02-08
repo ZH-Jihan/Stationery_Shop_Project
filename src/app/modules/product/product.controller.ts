@@ -1,97 +1,78 @@
 import { Request, Response } from 'express';
+import { StatusCodes } from 'http-status-codes';
 import ApiError from '../../utils/ApiError';
 import ApiResponse from '../../utils/ApiResponse';
+import asyncHandler from '../../utils/asyncHandler';
 import { ProductService } from './product.services';
 import ProductValidationSchema from './product.validation';
 
-const createProduct = async (req: Request, res: Response) => {
-  try {
-    const product = req.body;
-    const validateProduct = ProductValidationSchema.parse(product);
+const createProduct = asyncHandler(async (req, res) => {
+  const product = req.body;
+  const validateProduct = ProductValidationSchema.parse(product);
 
-    const createdProduct =
-      await ProductService.createProductDB(validateProduct);
+  const createdProduct = await ProductService.createProductDB(validateProduct);
 
-    res
-      .status(200)
-      .json(
-        new ApiResponse(200, createdProduct, 'Product created successfully'),
-      );
-  } catch (error: any) {
-    res
-      .status(400)
-      .json(new ApiError('Something went wrong', false, error, error?.stack));
+  return ApiResponse(res, {
+    statusCode: StatusCodes.OK,
+    data: createdProduct,
+    message: 'Product created successfully',
+  });
+});
+
+const getAllProduct = asyncHandler(async (req: Request, res: Response) => {
+  const { searchTerm } = req.query;
+  let result;
+  if (searchTerm) {
+    result = await ProductService.getProductBySearchTerm(searchTerm as string);
+  } else {
+    result = await ProductService.getAllProductDB();
   }
-};
 
-const getAllProduct = async (req: Request, res: Response) => {
-  try {
-    const { searchTerm } = req.query;
-    let result;
-    if (searchTerm) {
-      result = await ProductService.getProductBySearchTerm(
-        searchTerm as string,
-      );
-    } else {
-      result = await ProductService.getAllProductDB();
-    }
-    res
-      .status(200)
-      .json(new ApiResponse(200, result, 'Product retrieved successfully'));
-  } catch (error: any) {
-    res
-      .status(400)
-      .json(new ApiError('Something went wrong', false, error, error?.stack));
-  }
-};
+  return ApiResponse(res, {
+    statusCode: StatusCodes.OK,
+    data: result,
+    message: 'Products retrieved successfully',
+  });
+});
 
 const getSingleProduct = async (req: Request, res: Response) => {
-  try {
-    const { productId: id } = req.params;
-    const singleProduct = await ProductService.getProductById(id);
-    if (!singleProduct) {
-      res
-        .status(404)
-        .json(new ApiResponse(404, singleProduct, 'Product Not Found'));
-    }
-    res
-      .status(200)
-      .json(
-        new ApiResponse(200, singleProduct, 'Product retrieved successfully'),
-      );
-  } catch (error: any) {
-    res
-      .status(400)
-      .json(new ApiError('Something went wrong', false, error, error?.stack));
+  const { productId: id } = req.params;
+  const singleProduct = await ProductService.getProductById(id);
+  if (!singleProduct) {
+    throw new ApiError(StatusCodes.NOT_FOUND, 'Product not found');
   }
+
+  return ApiResponse(res, {
+    statusCode: StatusCodes.OK,
+    data: singleProduct,
+    message: 'Product retrieved successfully',
+  });
 };
 
-const updateProduct = async (req: Request, res: Response) => {
+const updateProduct = asyncHandler(async (req: Request, res: Response) => {
   const { productId: id } = req.params;
   const data = req.body;
-  try {
-    const product = await ProductService.updateOneProductDB(id, data);
-    res
-      .status(200)
-      .json(new ApiResponse(200, product, 'Product updated successfully'));
-  } catch (error: any) {
-    res
-      .status(400)
-      .json(new ApiError('Something went wrong', false, error, error?.stack));
-  }
-};
+  const product = await ProductService.updateOneProductDB(id, data);
 
-const deleteProduct = async (req: Request, res: Response) => {
+  return ApiResponse(res, {
+    statusCode: StatusCodes.OK,
+    data: product,
+    message: 'Product updated successfully',
+  });
+});
+
+const deleteProduct = asyncHandler(async (req: Request, res: Response) => {
   const { productId: id } = req.params;
-  try {
-    const deleted = await ProductService.deleteProductByIdDB(id);
-    res.json(deleted);
-  } catch (error: any) {
-    res
-      .status(400)
-      .json(new ApiError('Something went wrong', false, error, error?.stack));
+  const deleted = await ProductService.deleteProductByIdDB(id);
+  if (!deleted) {
+    throw new ApiError(StatusCodes.NOT_FOUND, 'Product not found');
   }
-};
+  return ApiResponse(res, {
+    statusCode: StatusCodes.OK,
+    data: {},
+    message: 'Product deleted successfully',
+  });
+});
 
 export const ProductController = {
   createProduct,

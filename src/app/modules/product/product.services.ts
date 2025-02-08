@@ -1,4 +1,3 @@
-import ApiResponse from '../../utils/ApiResponse';
 import { Product } from './product.interface';
 import { ProductModel } from './product.model';
 
@@ -47,10 +46,7 @@ const deleteProductByIdDB = async (id: string) => {
     { _id: id },
     { isDeleted: true },
   );
-  if (deleteProduct2) {
-    return new ApiResponse(200, {}, 'Product deleted successfully');
-  }
-  return new ApiResponse(404, {}, 'Product Not Found');
+  return deleteProduct2;
 };
 
 export const ProductService = {

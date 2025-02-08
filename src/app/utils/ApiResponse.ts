@@ -1,15 +1,19 @@
-class ApiResponse {
-  statusCode: number;
-  success: boolean;
-  message: string;
-  data?: any;
+import { Response } from 'express';
 
-  constructor(statusCode: number, data: any, massage: string, success = true) {
-    this.statusCode = statusCode;
-    this.message = massage;
-    this.success = success;
-    this.data = data;
-  }
-}
+type TResponse<T> = {
+  statusCode: number;
+  success?: boolean;
+  message: string;
+  data?: T;
+};
+
+const ApiResponse = <T>(res: Response, data: TResponse<T>) => {
+  res.status(data.statusCode).json({
+    success: data.success || true,
+    statusCode: data.statusCode,
+    message: data.message,
+    data: data.data,
+  });
+};
 
 export default ApiResponse;

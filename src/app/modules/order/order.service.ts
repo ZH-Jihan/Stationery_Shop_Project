@@ -1,4 +1,5 @@
-import ApiResponse from '../../utils/ApiResponse';
+import { StatusCodes } from 'http-status-codes';
+import ApiError from '../../utils/ApiError';
 import { ProductService } from '../product/product.services';
 import { Order } from './order.interface';
 import { OrderModel } from './order.model';
@@ -7,9 +8,12 @@ const createOrderDB = async (data: Order) => {
   const { email, product: productId, quantity, totalPrice } = data;
   const getProduct = await ProductService.getProductById(productId);
   if (!getProduct) {
-    return new ApiResponse(404, {}, 'Could not find product', false);
+    throw new ApiError(StatusCodes.NOT_FOUND, 'Produtc not found');
   } else if (getProduct.quantity < quantity) {
-    return new ApiResponse(404, {}, 'Stock not available', false);
+    return new ApiError(
+      StatusCodes.SERVICE_UNAVAILABLE,
+      'Product quantity is Unavailable',
+    );
   } else {
     getProduct.quantity -= quantity;
     if (getProduct.quantity === 0) {
@@ -18,7 +22,7 @@ const createOrderDB = async (data: Order) => {
     await getProduct.save();
 
     const newOrder = await OrderModel.create(data);
-    return new ApiResponse(200, newOrder, 'Order created successfully');
+    return newOrder;
   }
 };
 
@@ -54,22 +58,8 @@ const orderRevenueCalculat = async () => {
       },
     },
   ]);
-  console.log(calculateOrder);
 
-  if (Array.isArray(calculateOrder) && calculateOrder.length === 1) {
-    return new ApiResponse(
-      200,
-      calculateOrder,
-      'Revenue calculated successfully',
-    );
-  } else {
-    return new ApiResponse(
-      404,
-      {},
-      'Do not have any data to calculated revenue',
-      false,
-    );
-  }
+  return calculateOrder;
 };
 
 export const OrderServices = {
