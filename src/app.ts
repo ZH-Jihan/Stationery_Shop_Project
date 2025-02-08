@@ -1,25 +1,20 @@
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import express from 'express';
-import orderRoutes from './app/modules/order/order.router';
-import productRoutes from './app/modules/product/product.router';
+import express, { Request, Response } from 'express';
+import router from './app/routers';
 
 const app = express();
 
-app.use(
-  cors({
-    origin: '*',
-    // credentials: true,
-  }),
-);
+app.use(cors({ origin: '*', credentials: true }));
 app.use(express.json());
-app.get('/', (req, res) => {
-  res.send('Running Assignment');
+app.use(cookieParser());
+
+// When server starts and hit root path
+app.get('/', (req: Request, res: Response) => {
+  res.send('Welcome to the Stationery Shop');
 });
 
-// app.use(express.urlencoded({ extended: true, limit: '16kb' }));
-// app.use(express.static('public'));
-
-app.use('/api/products', productRoutes);
-app.use('/api/orders', orderRoutes);
+// Apply router middleware to all routes under '/api'
+app.use('/api', router);
 
 export default app;

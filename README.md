@@ -1,4 +1,4 @@
-# store_stationery_project
+# Stationery Shop Application
 
 The Stationery Shop application is a comprehensive web application built using Express and TypeScript to manage the operations of a stationery shop. It allows users to manage products, place orders, and track the total revenue from all orders. The application integrates with MongoDB using Mongoose for data storage and schema validation.
 
@@ -39,13 +39,13 @@ Ensure that the following software is installed on your machine:
 1. #### Clone the repository:
 
 ```bash
-  git clone https://github.com/ZH-Jihan/Store_Stationery_Project
+  git clone c
 ```
 
 2. #### Setup & run Project
 
 ```bash
-  cd Store_Stationery_Project
+  cd  Stationery_Shop_Project
   npm install
   npm run start:dev
 ```
@@ -54,7 +54,7 @@ The application should now be running on http://localhost:8000
 
 ## Demo
 
-Github Link - https://github.com/ZH-Jihan/Store_Stationery_Project.  
+Github Link - https://github.com/ZH-Jihan/Stationery_Shop_Project.git.  
 Live Server Link - https://store-stationery-project.vercel.app.
 
 ## Authors

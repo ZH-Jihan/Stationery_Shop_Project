@@ -17,7 +17,7 @@ const createProduct = async (req: Request, res: Response) => {
       .json(
         new ApiResponse(200, createdProduct, 'Product created successfully'),
       );
-  } catch (error) {
+  } catch (error: any) {
     res
       .status(400)
       .json(new ApiError('Something went wrong', false, error, error?.stack));
@@ -38,7 +38,7 @@ const getAllProduct = async (req: Request, res: Response) => {
     res
       .status(200)
       .json(new ApiResponse(200, result, 'Product retrieved successfully'));
-  } catch (error) {
+  } catch (error: any) {
     res
       .status(400)
       .json(new ApiError('Something went wrong', false, error, error?.stack));
@@ -59,7 +59,7 @@ const getSingleProduct = async (req: Request, res: Response) => {
       .json(
         new ApiResponse(200, singleProduct, 'Product retrieved successfully'),
       );
-  } catch (error) {
+  } catch (error: any) {
     res
       .status(400)
       .json(new ApiError('Something went wrong', false, error, error?.stack));
@@ -74,7 +74,7 @@ const updateProduct = async (req: Request, res: Response) => {
     res
       .status(200)
       .json(new ApiResponse(200, product, 'Product updated successfully'));
-  } catch (error) {
+  } catch (error: any) {
     res
       .status(400)
       .json(new ApiError('Something went wrong', false, error, error?.stack));
@@ -86,7 +86,7 @@ const deleteProduct = async (req: Request, res: Response) => {
   try {
     const deleted = await ProductService.deleteProductByIdDB(id);
     res.json(deleted);
-  } catch (error) {
+  } catch (error: any) {
     res
       .status(400)
       .json(new ApiError('Something went wrong', false, error, error?.stack));

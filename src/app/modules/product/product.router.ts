@@ -14,4 +14,4 @@ routes
   .put(ProductController.updateProduct)
   .delete(ProductController.deleteProduct);
 
-export default routes;
+export const ProductRouters = routes;
