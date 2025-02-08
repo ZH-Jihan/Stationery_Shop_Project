@@ -39,7 +39,7 @@ Ensure that the following software is installed on your machine:
 1. #### Clone the repository:
 
 ```bash
-  git clone c
+  git clone https://github.com/ZH-Jihan/Stationery_Shop_Project.git
 ```
 
 2. #### Setup & run Project
