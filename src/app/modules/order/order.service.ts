@@ -1,6 +1,6 @@
 import { StatusCodes } from 'http-status-codes';
 import ApiError from '../../utils/ApiError';
-import { ProductService } from '../product/product.services';
+import { ProductService } from '../product/product.service';
 import { Order } from './order.interface';
 import { OrderModel } from './order.model';
 

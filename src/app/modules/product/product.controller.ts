@@ -3,7 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 import ApiError from '../../utils/ApiError';
 import ApiResponse from '../../utils/ApiResponse';
 import asyncHandler from '../../utils/asyncHandler';
-import { ProductService } from './product.services';
+import { ProductService } from './product.service';
 import ProductValidationSchema from './product.validation';
 
 const createProduct = asyncHandler(async (req, res) => {
