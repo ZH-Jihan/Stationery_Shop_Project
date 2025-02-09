@@ -10,9 +10,9 @@ const createOrderDB = async (data: Order) => {
   if (!getProduct) {
     throw new ApiError(StatusCodes.NOT_FOUND, 'Produtc not found');
   } else if (getProduct.quantity < quantity) {
-    return new ApiError(
-      StatusCodes.SERVICE_UNAVAILABLE,
-      'Product quantity is Unavailable',
+    throw new ApiError(
+      StatusCodes.UNPROCESSABLE_ENTITY,
+      'Product quantity is higher than quantity',
     );
   } else {
     getProduct.quantity -= quantity;

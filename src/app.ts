@@ -1,6 +1,7 @@
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express, { Request, Response } from 'express';
+import globalErrorHandler from './app/middlewares/globalErrorHandler';
 import router from './app/routers';
 
 const app = express();
@@ -16,5 +17,8 @@ app.get('/', (req: Request, res: Response) => {
 
 // Apply router middleware to all routes under '/api'
 app.use('/api', router);
+
+// Global Error Handler
+app.use(globalErrorHandler);
 
 export default app;

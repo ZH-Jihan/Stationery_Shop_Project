@@ -1,8 +1,8 @@
 import { z } from 'zod';
 
 const ProductValidationSchema = z.object({
-  name: z.string().min(20, 'Name is required'),
-  brand: z.string().min(20, 'Brand is required'),
+  name: z.string().min(2, 'Name is required'),
+  brand: z.string().min(2, 'Brand is required'),
   price: z.number().positive('Price must be a positive number'),
   category: z.enum(
     ['Writing', 'Office Supplies', 'Art Supplies', 'Educational', 'Technology'],

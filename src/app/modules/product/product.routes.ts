@@ -1,11 +1,16 @@
 import { Router } from 'express';
+import validateRequestData from '../../middlewares/validateRequestData';
 import { ProductController } from './product.controller';
+import ProductValidationSchema from './product.validation';
 
 const routes = Router();
 
 routes
   .route('/')
-  .post(ProductController.createProduct)
+  .post(
+    validateRequestData(ProductValidationSchema),
+    ProductController.createProduct,
+  )
   .get(ProductController.getAllProduct);
 
 routes

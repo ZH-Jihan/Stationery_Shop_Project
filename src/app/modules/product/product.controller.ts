@@ -4,13 +4,9 @@ import ApiError from '../../utils/ApiError';
 import ApiResponse from '../../utils/ApiResponse';
 import asyncHandler from '../../utils/asyncHandler';
 import { ProductService } from './product.service';
-import ProductValidationSchema from './product.validation';
 
 const createProduct = asyncHandler(async (req, res) => {
-  const product = req.body;
-  const validateProduct = ProductValidationSchema.parse(product);
-
-  const createdProduct = await ProductService.createProductDB(validateProduct);
+  const createdProduct = await ProductService.createProductDB(req.body);
 
   return ApiResponse(res, {
     statusCode: StatusCodes.OK,
