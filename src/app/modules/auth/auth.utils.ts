@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
-import { User } from '../modules/user/user.model';
+import { User } from '../user/user.model';
 
-const generateToken = async (
+export const generateToken = async (
   email: string,
   tokenSecret: string,
   tokenExpr: string,
@@ -16,10 +16,8 @@ const generateToken = async (
   };
 
   const token = jwt.sign(payload, tokenSecret, {
-    expiresIn: tokenExpr,
+    expiresIn: tokenExpr as string,
   });
 
   return token;
 };
-
-export default generateToken;

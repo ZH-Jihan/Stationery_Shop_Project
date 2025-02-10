@@ -4,7 +4,9 @@ export interface TUser {
   name: string;
   email: string;
   role: 'user' | 'admin';
+  status: 'active' | 'block';
   password: string;
+  isDeleted: boolean;
 }
 
 export interface TUserModel extends Model<TUser> {

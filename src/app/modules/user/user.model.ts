@@ -7,7 +7,13 @@ const userSchema = new Schema<TUser>({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   role: { type: String, enum: ['user', 'admin'], default: 'user' },
+  status: {
+    type: String,
+    enum: ['active', 'block'],
+    default: 'active',
+  },
   password: { type: String, required: true },
+  isDeleted: { type: Boolean, default: false },
 });
 
 userSchema.pre('save', async function (next) {

@@ -6,7 +6,7 @@ import { TErrorSources } from '../interface/error.interface';
 import ApiError from '../utils/ApiError';
 
 const globalErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
-  console.log(error);
+  // console.log(error);
 
   let statusCode = StatusCodes.BAD_REQUEST;
   let message = 'Something went wrong';
@@ -22,8 +22,7 @@ const globalErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
     statusCode = errorReponse?.statusCode;
     message = errorReponse?.message;
     errorSources = errorReponse?.errorSource;
-  }
-  if (error instanceof ApiError) {
+  } else if (error instanceof ApiError) {
     statusCode = error?.statusCode;
     message = error?.message;
     errorSources = [
@@ -32,8 +31,7 @@ const globalErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
         message: error?.message,
       },
     ];
-  }
-  if (error instanceof Error) {
+  } else if (error instanceof Error) {
     statusCode = StatusCodes.BAD_REQUEST;
     message = error?.message;
     errorSources = [
@@ -43,6 +41,7 @@ const globalErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
       },
     ];
   }
+
   res.status(statusCode).json({
     success: false,
     statusCode,
