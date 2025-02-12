@@ -1,4 +1,5 @@
 import { StatusCodes } from 'http-status-codes';
+import ApiError from '../../utils/ApiError';
 import ApiResponse from '../../utils/ApiResponse';
 import asyncHandler from '../../utils/asyncHandler';
 import { AuthServices } from './auth.service';
@@ -21,4 +22,21 @@ const loginUser = asyncHandler(async (req, res) => {
   });
 });
 
-export { loginUser };
+const genAccessToken = asyncHandler(async (req, res) => {
+  const { refreshToken } = req.cookies;
+
+  if (!refreshToken) {
+    throw new ApiError(StatusCodes.UNAUTHORIZED, 'Refresh token is required');
+  }
+
+  const result =
+    await AuthServices.genAccessTokenWithRefreshToken(refreshToken);
+
+  return ApiResponse(res, {
+    statusCode: StatusCodes.OK,
+    message: 'Access token was created successfully',
+    data: result,
+  });
+});
+
+export { genAccessToken, loginUser };

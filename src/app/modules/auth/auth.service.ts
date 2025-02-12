@@ -3,7 +3,7 @@ import config from '../../config';
 import ApiError from '../../utils/ApiError';
 import { User } from '../user/user.model';
 import { TLogin } from './auth.interface';
-import { generateToken } from './auth.utils';
+import { generateToken, verifyToken } from './auth.utils';
 
 const loginUserIntoDB = async (payload: TLogin) => {
   const user = await User.isUserExist(payload.email);
@@ -29,13 +29,13 @@ const loginUserIntoDB = async (payload: TLogin) => {
 
   // If all conditions are met, then create token
   const accessToken = await generateToken(
-    payload.email,
+    user.email,
     config.access_token_secret as string,
     config.access_token_expire as string,
   );
 
   const refreshToken = await generateToken(
-    payload.email,
+    user.email,
     config.refresh_token_secret as string,
     config.refresh_token_expire as string,
   );
@@ -46,6 +46,39 @@ const loginUserIntoDB = async (payload: TLogin) => {
   };
 };
 
+const genAccessTokenWithRefreshToken = async (token: string) => {
+  const decoded = verifyToken(token, config.refresh_token_secret as string);
+
+  if (!decoded) {
+    throw new ApiError(StatusCodes.UNAUTHORIZED, 'Invalid refresh token');
+  }
+
+  const { exp, email } = decoded;
+
+  const user = await User.isUserExist(email);
+
+  if (!user) {
+    throw new ApiError(StatusCodes.NOT_FOUND, 'User not found');
+  }
+
+  if (user.status === 'block') {
+    throw new ApiError(StatusCodes.UNAUTHORIZED, 'User has been blocked');
+  }
+
+  if (user.isDeleted) {
+    throw new ApiError(StatusCodes.FORBIDDEN, 'User has been deleted');
+  }
+
+  const accessToken = await generateToken(
+    email,
+    config.access_token_secret as string,
+    config.access_token_expire as string,
+  );
+
+  return { accessToken };
+};
+
 export const AuthServices = {
   loginUserIntoDB,
+  genAccessTokenWithRefreshToken,
 };
