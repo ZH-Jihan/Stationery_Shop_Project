@@ -1,21 +1,18 @@
+import QueryBuilder from '../../build/quaryBuilder';
+import { uploadImgToCloudinary } from '../../middlewares/uploadImgToCloudinary';
 import { Product } from './product.interface';
 import { ProductModel } from './product.model';
 
-const createProductDB = async (product: Product) => {
-  const newProduct = await ProductModel.create(product);
-  return newProduct;
-};
+const createProductDB = async (file: any, product: Product) => {
+  if (file) {
+    const fileName = `${product.name}-${product.category}`;
+    const path = file?.path;
 
-const getProductBySearchTerm = async (queryParam: string) => {
-  const searchQuery = {
-    $or: [
-      { name: queryParam },
-      { brand: queryParam },
-      { category: queryParam },
-    ],
-  };
-  const searchingProduct = await ProductModel.find(searchQuery);
-  return searchingProduct;
+    const { secure_url } = await uploadImgToCloudinary(path, fileName);
+    console.log(secure_url);
+  }
+  // const newProduct = await ProductModel.create(product);
+  // return newProduct;
 };
 
 const getProductById = async (id: string) => {
@@ -23,9 +20,20 @@ const getProductById = async (id: string) => {
   return singleProduct;
 };
 
-const getAllProductDB = async () => {
-  const allProduct = await ProductModel.find();
-  return allProduct;
+const getAllProductDB = async (queryParam: Record<string, unknown>) => {
+  const allProduct = new QueryBuilder(ProductModel.find(), queryParam)
+    .search(['name', 'brand', 'category'])
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+  const metaData = await allProduct.metaData();
+  const result = await allProduct.queryModel;
+
+  return {
+    metaData,
+    result,
+  };
 };
 
 const updateOneProductDB = async (id: string, data: object) => {
@@ -52,7 +60,6 @@ const deleteProductByIdDB = async (id: string) => {
 export const ProductService = {
   createProductDB,
   getAllProductDB,
-  getProductBySearchTerm,
   updateOneProductDB,
   getProductById,
   deleteProductByIdDB,

@@ -6,7 +6,10 @@ import asyncHandler from '../../utils/asyncHandler';
 import { ProductService } from './product.service';
 
 const createProduct = asyncHandler(async (req, res) => {
-  const createdProduct = await ProductService.createProductDB(req.body);
+  const createdProduct = await ProductService.createProductDB(
+    req.file,
+    req.body,
+  );
 
   return ApiResponse(res, {
     statusCode: StatusCodes.OK,
@@ -16,17 +19,12 @@ const createProduct = asyncHandler(async (req, res) => {
 });
 
 const getAllProduct = asyncHandler(async (req: Request, res: Response) => {
-  const { searchTerm } = req.query;
-  let result;
-  if (searchTerm) {
-    result = await ProductService.getProductBySearchTerm(searchTerm as string);
-  } else {
-    result = await ProductService.getAllProductDB();
-  }
+  const result = await ProductService.getAllProductDB(req.query);
 
   return ApiResponse(res, {
     statusCode: StatusCodes.OK,
-    data: result,
+    meta: result.metaData,
+    data: result.result,
     message: 'Products retrieved successfully',
   });
 });

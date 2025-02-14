@@ -26,7 +26,10 @@ const genAccessToken = asyncHandler(async (req, res) => {
   const { refreshToken } = req.cookies;
 
   if (!refreshToken) {
-    throw new ApiError(StatusCodes.UNAUTHORIZED, 'Refresh token is required');
+    throw new ApiError(
+      StatusCodes.EXPECTATION_FAILED,
+      'Refresh token is required',
+    );
   }
 
   const result =

@@ -11,4 +11,7 @@ export default {
   refresh_token_secret: process.env.REFRESH_TOKEN_SECRET,
   access_token_expire: process.env.ACCESS_TOKEN_EXPIRY,
   refresh_token_expire: process.env.REFRESH_TOKEN_EXPIRY,
+  cloud_name: process.env.CLOUD_NAME,
+  cloud_api_key: process.env.CLOUD_AIP_KEY,
+  cloud_api_secret: process.env.CLOUD_AIP_SECRET,
 };

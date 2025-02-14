@@ -6,6 +6,7 @@ const productSchema = new Schema<Product>(
     name: { type: String, required: true },
     brand: { type: String, required: true },
     price: { type: Number, required: true },
+    image: { type: String, required: true},
     category: {
       type: String,
       enum: [
