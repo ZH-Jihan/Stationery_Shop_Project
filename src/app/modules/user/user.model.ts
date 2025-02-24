@@ -7,6 +7,10 @@ const userSchema = new Schema<TUser>({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   role: { type: String, enum: ['user', 'admin'], default: 'user' },
+  phone: { type: String, default: 'Unknown' },
+  address: { type: String, default: 'Unknown' },
+  city: { type: String, default: 'Unknown' },
+  image: { type: String ,default: 'Unknown' },
   status: {
     type: String,
     enum: ['active', 'block'],

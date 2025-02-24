@@ -19,7 +19,7 @@ routes
     validateRequestData(ProductValidationSchema),
     ProductController.createProduct,
   )
-  .get(auth('user', 'admin'), ProductController.getAllProduct);
+  .get(ProductController.getAllProduct);
 
 routes
   .route('/:productId')

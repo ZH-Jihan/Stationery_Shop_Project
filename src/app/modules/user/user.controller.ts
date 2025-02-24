@@ -13,4 +13,19 @@ const registerUser = asyncHandler(async (req, res) => {
   });
 });
 
-export { registerUser };
+const updateUserWonProfile = asyncHandler(async (req, res) => {
+  const { email } = req.user;
+  const { profileEmail } = req.params;
+  const result = await UserServices.updateUserWonProfileInDb(
+    email,
+    profileEmail,
+    req.body,
+  );
+  return ApiResponse(res, {
+    statusCode: StatusCodes.OK,
+    data: result,
+    message: 'User won profile updated successfully',
+  });
+});
+
+export { registerUser, updateUserWonProfile };

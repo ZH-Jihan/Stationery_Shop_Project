@@ -1,3 +1,4 @@
+import { Types } from 'mongoose';
 import QueryBuilder from '../../build/quaryBuilder';
 import { uploadImgToCloudinary } from '../../middlewares/uploadImgToCloudinary';
 import { Product } from './product.interface';
@@ -10,12 +11,14 @@ const createProductDB = async (file: any, product: Product) => {
 
     const { secure_url } = await uploadImgToCloudinary(path, fileName);
     console.log(secure_url);
+
+    product.image = secure_url as string;
   }
-  // const newProduct = await ProductModel.create(product);
-  // return newProduct;
+  const newProduct = await ProductModel.create(product);
+  return newProduct;
 };
 
-const getProductById = async (id: string) => {
+const getProductById = async (id: Types.ObjectId) => {
   const singleProduct = await ProductModel.findById(id);
   return singleProduct;
 };
@@ -42,7 +45,7 @@ const updateOneProductDB = async (id: string, data: object) => {
     { $set: data },
     { new: true },
   );
-  return updateProduct;
+  return;
 };
 
 const deleteProductByIdDB = async (id: string) => {

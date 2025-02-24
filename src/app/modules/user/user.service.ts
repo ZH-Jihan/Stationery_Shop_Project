@@ -18,6 +18,28 @@ const registerNewUserIntoDb = async (payload: TUser) => {
   return newUser;
 };
 
+const updateUserWonProfileInDb = async (
+  email: string,
+  profileEmail: string,
+  payload: Partial<TUser>,
+) => {
+  const user = await User.isUserExist(email);
+
+  if (user.email !== profileEmail) {
+    throw new ApiError(
+      StatusCodes.FORBIDDEN,
+      `You are not allowed to update this profile`,
+    );
+  }
+
+  const updated = await User.findOneAndUpdate({ email }, payload, {
+    new: true,
+  });
+
+  return updated;
+};
+
 export const UserServices = {
   registerNewUserIntoDb,
+  updateUserWonProfileInDb,
 };
