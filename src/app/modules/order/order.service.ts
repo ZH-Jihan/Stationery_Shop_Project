@@ -113,7 +113,9 @@ const getAllOrders = async () => {
 };
 
 const getUserWonOrders = async (id: Types.ObjectId) => {
-  const data = await Order.find({ user: id });
+  const data = await Order.find({ user: id })
+    .populate('user')
+    .populate('product');
   return data;
 };
 

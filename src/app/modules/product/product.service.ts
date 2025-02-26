@@ -18,7 +18,7 @@ const createProductDB = async (file: any, product: Product) => {
   return newProduct;
 };
 
-const getProductById = async (id: Types.ObjectId) => {
+const getProductById = async (id: string | Types.ObjectId) => {
   const singleProduct = await ProductModel.findById(id);
   return singleProduct;
 };

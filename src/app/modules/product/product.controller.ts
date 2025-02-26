@@ -30,8 +30,8 @@ const getAllProduct = asyncHandler(async (req: Request, res: Response) => {
 });
 
 const getSingleProduct = async (req: Request, res: Response) => {
-  const { productId: id } = req.params;
-  const singleProduct = await ProductService.getProductById(id);
+  const { productId } = req.params;
+  const singleProduct = await ProductService.getProductById(productId);
   if (!singleProduct) {
     throw new ApiError(StatusCodes.NOT_FOUND, 'Product not found');
   }

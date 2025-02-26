@@ -24,7 +24,17 @@ routes
 routes
   .route('/:productId')
   .get(ProductController.getSingleProduct)
-  .put(ProductController.updateProduct)
+  .put(
+    auth('admin'),
+    upload.single('file'),
+    (req: Request, res: Response, next: NextFunction) => {
+      console.log(req.body);
+
+      req.body = JSON.parse(req.body?.data);
+      next();
+    },
+    ProductController.updateProduct,
+  )
   .delete(ProductController.deleteProduct);
 
 export const ProductRouters = routes;

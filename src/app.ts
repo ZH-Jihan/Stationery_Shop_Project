@@ -1,13 +1,14 @@
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express, { NextFunction, Request, Response } from 'express';
+import config from './app/config';
 import globalErrorHandler from './app/middlewares/globalErrorHandler';
 import notFoundRoute from './app/middlewares/notFoundRoutes';
 import router from './app/routers';
 
 const app = express();
 
-app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
+app.use(cors({ origin: config.frontend_prodution_url, credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
 

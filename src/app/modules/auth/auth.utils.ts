@@ -18,7 +18,7 @@ export const generateToken = async (
   };
 
   return jwt.sign(jwtPayload, secret, {
-    expiresIn,
+    expiresIn : "10d" ,
   });
 };
 
