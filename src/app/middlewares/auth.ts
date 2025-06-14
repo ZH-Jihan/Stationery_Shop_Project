@@ -11,7 +11,6 @@ const auth = (...roles: TUserRole[]) => {
     const token = req?.headers?.authorization?.startsWith('Bearer ')
       ? req.headers.authorization.replace('Bearer ', '').trim()
       : null;
-
     if (!token) {
       throw new ApiError(StatusCodes.UNAUTHORIZED, 'Invalid token');
     }

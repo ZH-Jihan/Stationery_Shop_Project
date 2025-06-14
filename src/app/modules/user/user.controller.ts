@@ -28,4 +28,14 @@ const updateUserWonProfile = asyncHandler(async (req, res) => {
   });
 });
 
-export { registerUser, updateUserWonProfile };
+const getUserProfile = asyncHandler(async (req, res) => {
+  const { _id } = req.user;
+  const result = await UserServices.getUserProfileInDb(_id as string);
+  return ApiResponse(res, {
+    statusCode: StatusCodes.OK,
+    data: result,
+    message: 'User profile fetched successfully',
+  });
+});
+
+export { getUserProfile, registerUser, updateUserWonProfile };

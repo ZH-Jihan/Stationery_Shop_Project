@@ -10,7 +10,7 @@ const userSchema = new Schema<TUser>({
   phone: { type: String, default: 'Unknown' },
   address: { type: String, default: 'Unknown' },
   city: { type: String, default: 'Unknown' },
-  image: { type: String ,default: 'Unknown' },
+  image: { type: String, default: 'Unknown' },
   status: {
     type: String,
     enum: ['active', 'block'],
@@ -31,6 +31,7 @@ userSchema.post('save', function (doc, next) {
 });
 
 userSchema.statics.isUserExist = async function (email: string) {
+  console.log(email);
   return await User.findOne({ email: email }).select('+password');
 };
 

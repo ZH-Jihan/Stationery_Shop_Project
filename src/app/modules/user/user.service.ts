@@ -39,7 +39,16 @@ const updateUserWonProfileInDb = async (
   return updated;
 };
 
+const getUserProfileInDb = async (userId: string) => {
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new ApiError(StatusCodes.NOT_FOUND, 'User not found');
+  }
+  return user;
+};
+
 export const UserServices = {
   registerNewUserIntoDb,
   updateUserWonProfileInDb,
+  getUserProfileInDb,
 };

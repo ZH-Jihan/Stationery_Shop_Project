@@ -14,11 +14,12 @@ router
     validateRequestData(OrderValidationSchema),
     OrderController.createOrderInDb,
   );
+router.route('/success/:transId').post(OrderController.verifyPayment);
 router
-  .route('/payment_verify')
-  .get(auth('user'), OrderController.verifyPayment);
+  .route('/verify-payment/:transId')
+  .get(auth('user'), OrderController.verifyByID);
 
 router.route('/won_order').get(auth('user'), OrderController.getUserWonOrder);
 
-router.route('/revenue').get(OrderController.calculateOrderRevenue);
+// router.route('/revenue').get(OrderController.calculateOrderRevenue);
 export const OrderRoutes = router;

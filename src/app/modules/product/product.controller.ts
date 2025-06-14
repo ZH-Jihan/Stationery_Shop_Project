@@ -7,7 +7,7 @@ import { ProductService } from './product.service';
 
 const createProduct = asyncHandler(async (req, res) => {
   const createdProduct = await ProductService.createProductDB(
-    req.file,
+    req.files as Express.Multer.File[],
     req.body,
   );
 
@@ -46,7 +46,11 @@ const getSingleProduct = async (req: Request, res: Response) => {
 const updateProduct = asyncHandler(async (req: Request, res: Response) => {
   const { productId: id } = req.params;
   const data = req.body;
-  const product = await ProductService.updateOneProductDB(id, data);
+  const product = await ProductService.updateOneProductDB(
+    id,
+    req.files as Express.Multer.File[],
+    data,
+  );
 
   return ApiResponse(res, {
     statusCode: StatusCodes.OK,

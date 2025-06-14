@@ -3,7 +3,7 @@ import auth from '../../middlewares/auth';
 import { upload } from '../../middlewares/uploadImgToCloudinary';
 import validateRequestData from '../../middlewares/validateRequestData';
 import { ProductController } from './product.controller';
-import ProductValidationSchema from './product.validation';
+import { ProductValidationSchema } from './product.validation';
 
 const routes = Router();
 
@@ -11,9 +11,10 @@ routes
   .route('/')
   .post(
     auth('admin'),
-    upload.single('file'),
+    upload.array('files', 5),
     (req: Request, res: Response, next: NextFunction) => {
       req.body = JSON.parse(req.body?.data);
+      console.log(req.body);
       next();
     },
     validateRequestData(ProductValidationSchema),
@@ -26,10 +27,8 @@ routes
   .get(ProductController.getSingleProduct)
   .put(
     auth('admin'),
-    upload.single('file'),
+    upload.array('files', 5),
     (req: Request, res: Response, next: NextFunction) => {
-      console.log(req.body);
-
       req.body = JSON.parse(req.body?.data);
       next();
     },

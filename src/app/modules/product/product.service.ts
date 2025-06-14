@@ -1,37 +1,39 @@
-import { Types } from 'mongoose';
 import QueryBuilder from '../../build/quaryBuilder';
 import { uploadImgToCloudinary } from '../../middlewares/uploadImgToCloudinary';
 import { Product } from './product.interface';
 import { ProductModel } from './product.model';
 
-const createProductDB = async (file: any, product: Product) => {
-  if (file) {
-    const fileName = `${product.name}-${product.category}`;
-    const path = file?.path;
+const createProductDB = async (
+  files: Express.Multer.File[],
+  product: Product,
+) => {
+  console.log(product);
+  const uploadedImages: string[] = [];
 
-    const { secure_url } = await uploadImgToCloudinary(path, fileName);
-    console.log(secure_url);
-
-    product.image = secure_url as string;
+  if (files && files.length > 0) {
+    for (const file of files) {
+      const fileName = `${product.name}-${product.category}-${Date.now()}`;
+      const path = file.path;
+      const { secure_url } = await uploadImgToCloudinary(path, fileName);
+      uploadedImages.push(secure_url as string);
+    }
   }
+
+  product.image = uploadedImages;
   const newProduct = await ProductModel.create(product);
   return newProduct;
 };
 
-const getProductById = async (id: string | Types.ObjectId) => {
-  const singleProduct = await ProductModel.findById(id);
-  return singleProduct;
-};
-
-const getAllProductDB = async (queryParam: Record<string, unknown>) => {
-  const allProduct = new QueryBuilder(ProductModel.find(), queryParam)
+const getAllProductDB = async (query: Record<string, unknown>) => {
+  const productQuery = new QueryBuilder(ProductModel.find(), query)
     .search(['name', 'brand', 'category'])
     .filter()
     .sort()
     .paginate()
     .fields();
-  const metaData = await allProduct.metaData();
-  const result = await allProduct.queryModel;
+
+  const result = await productQuery.queryModel;
+  const metaData = await productQuery.metaData();
 
   return {
     metaData,
@@ -39,31 +41,57 @@ const getAllProductDB = async (queryParam: Record<string, unknown>) => {
   };
 };
 
-const updateOneProductDB = async (id: string, data: object) => {
+const getProductById = async (id: string) => {
+  const result = await ProductModel.findById(id);
+  return result;
+};
+
+const updateOneProductDB = async (
+  id: string,
+  files: Express.Multer.File[],
+  data: Partial<Product>,
+) => {
+  const uploadedImages: string[] = [];
+
+  if (files && files.length > 0) {
+    for (const file of files) {
+      const fileName = `${data.name || 'product'}-${data.category || 'category'}-${Date.now()}`;
+      const path = file.path;
+      const { secure_url } = await uploadImgToCloudinary(path, fileName);
+      uploadedImages.push(secure_url as string);
+    }
+  }
+
+  // If there are existing images in the update data, add them to the array
+  if (data.image && data.image.length > 0) {
+    uploadedImages.push(...data.image);
+  }
+
+  if (uploadedImages.length > 0) {
+    data.image = uploadedImages;
+  }
+
   const updateProduct = await ProductModel.findByIdAndUpdate(
     { _id: id },
     { $set: data },
     { new: true },
   );
-  return;
+  return updateProduct;
 };
 
 const deleteProductByIdDB = async (id: string) => {
-  // This type of delete operation is not recommended for production level applications because data permanently delete from the database.
-  // const deleteProduct = await ProductModel.findByIdAndDelete({ _id: id });
-
-  // Best pactries to delete the data from the database
-  const deleteProduct2 = await ProductModel.findByIdAndUpdate(
+  const result = await ProductModel.findByIdAndUpdate(
     { _id: id },
     { isDeleted: true },
+    { new: true },
   );
-  return deleteProduct2;
+  return result;
 };
 
 export const ProductService = {
   createProductDB,
   getAllProductDB,
-  updateOneProductDB,
   getProductById,
+  updateOneProductDB,
   deleteProductByIdDB,
 };

@@ -1,38 +1,90 @@
-import { model, Schema } from 'mongoose';
+import { Schema, model } from 'mongoose';
 import { TOrder } from './order.interface';
 
 const orderSchema = new Schema<TOrder>(
   {
     user: {
       type: Schema.Types.ObjectId,
-      required: true,
       ref: 'User',
-    },
-    product: {
-      type: Schema.Types.ObjectId,
-      ref: 'Product',
       required: true,
     },
+    items: [
+      {
+        product: {
+          type: Schema.Types.ObjectId,
+          ref: 'Product',
+          required: true,
+        },
+        quantity: {
+          type: Number,
+          required: true,
+          min: 1,
+        },
+        price: {
+          type: Number,
+          required: true,
+          min: 0,
+        },
+      },
+    ],
     status: {
       type: String,
-      enum: ['Pending', 'Processing', 'Shipped', 'Delivered'],
-      default: 'Pending',
+      enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled'],
+      default: 'pending',
     },
     payment: {
-      type: String,
-      enum: ['Pending', 'Paid', 'Failed', 'Cancelled'],
-      default: 'Pending',
+      status: {
+        type: String,
+        enum: ['pending', 'paid', 'failed', 'cancelled'],
+        default: 'pending',
+      },
+      method: {
+        type: String,
+        enum: ['cod', 'sslcommerz'],
+        required: true,
+      },
+      transaction: {
+        id: String,
+        method: String,
+        amount: Number,
+        currency: String,
+        status: {
+          type: String,
+          enum: ['completed', 'failed', 'pending'],
+        },
+        paidAt: Date,
+      },
     },
-    quantity: { type: Number, required: true },
-    totalPrice: { type: Number, required: true },
-    transaction: {
-      id: String,
-      transactionStatus: String,
-      bank_status: String,
-      sp_code: String,
-      sp_message: String,
-      method: String,
-      date_time: String,
+    totalPrice: {
+      type: Number,
+      required: true,
+      min: 0,
+    },
+    shippingAddress: {
+      fullName: {
+        type: String,
+        required: true,
+      },
+      phone: {
+        type: String,
+        required: true,
+      },
+      address: {
+        type: String,
+        required: true,
+      },
+      city: {
+        type: String,
+        required: true,
+      },
+      postalCode: {
+        type: String,
+        required: true,
+      },
+      country: {
+        type: String,
+        required: true,
+      },
     },
   },
   {

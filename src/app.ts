@@ -8,7 +8,12 @@ import router from './app/routers';
 
 const app = express();
 
-app.use(cors({ origin: [`http://localhost:3000`, config.frontend_prodution_url], credentials: true }));
+app.use(
+  cors({
+    origin: [`http://localhost:3000`, `${config.frontend_prodution_url}`],
+    credentials: true,
+  }),
+);
 app.use(express.json());
 app.use(cookieParser());
 
