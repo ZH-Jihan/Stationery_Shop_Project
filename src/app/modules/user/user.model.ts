@@ -10,7 +10,7 @@ const userSchema = new Schema<TUser>({
   phone: { type: String, default: 'Unknown' },
   address: { type: String, default: 'Unknown' },
   city: { type: String, default: 'Unknown' },
-  image: { type: String, default: 'Unknown' },
+  image: { type: String, default: '' },
   status: {
     type: String,
     enum: ['active', 'block'],
@@ -18,6 +18,12 @@ const userSchema = new Schema<TUser>({
   },
   password: { type: String, required: true },
   isDeleted: { type: Boolean, default: false },
+  wishlist: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Product',
+    },
+  ],
 });
 
 userSchema.pre('save', async function (next) {

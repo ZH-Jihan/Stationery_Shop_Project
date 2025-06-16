@@ -1,4 +1,4 @@
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 
 export interface TUser {
   name: string;
@@ -11,6 +11,7 @@ export interface TUser {
   status: 'active' | 'block';
   password: string;
   isDeleted: boolean;
+  wishlist?: Types.ObjectId[];
 }
 
 export interface TUserModel extends Model<TUser> {

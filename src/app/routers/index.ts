@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { AuthRoutes } from '../modules/auth/auth.routes';
+import { DashboardRoutes } from '../modules/dashboard/dashboard.routes';
 import { OrderRoutes } from '../modules/order/order.routes';
 import { ProductRouters } from '../modules/product/product.routes';
 import { UserRoutes } from '../modules/user/user.routes';
@@ -22,6 +23,10 @@ const allRoutersModel = [
   {
     path: '/auth',
     route: AuthRoutes,
+  },
+  {
+    path: '/dashboard',
+    route: DashboardRoutes,
   },
 ];
 

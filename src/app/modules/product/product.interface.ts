@@ -28,4 +28,5 @@ export type Product = {
   specifications: string[];
   warranty: string;
   isDeleted?: boolean;
+  rating?: number;
 };

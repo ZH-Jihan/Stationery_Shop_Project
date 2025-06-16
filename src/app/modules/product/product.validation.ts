@@ -34,4 +34,5 @@ export const ProductValidationSchema = z.object({
     .min(1, 'At least one specification is required'),
   warranty: z.string().min(1, 'Warranty information is required'),
   isDeleted: z.boolean().default(false),
+  rating: z.number().min(0).max(5).default(0),
 });

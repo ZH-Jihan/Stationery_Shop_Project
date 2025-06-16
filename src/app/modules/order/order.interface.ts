@@ -42,4 +42,6 @@ export type TOrder = {
     country: string;
   };
   transaction: TTransaction;
+  createdAt?: Date;
+  updatedAt?: Date;
 };

@@ -1,4 +1,5 @@
 import { StatusCodes } from 'http-status-codes';
+import config from '../../config';
 import ApiResponse from '../../utils/ApiResponse';
 import asyncHandler from '../../utils/asyncHandler';
 import { OrderServices } from './order.service';
@@ -44,7 +45,9 @@ const verifyPayment = asyncHandler(async (req, res) => {
   const order = await OrderServices.verifyPaymentDB(transId);
 
   if (order) {
-    res.redirect(`http://localhost:3000/payment/success?tran_id=${transId}`);
+    res.redirect(
+      `${config.frontend_prodution_url}/payment/success?tran_id=${transId}`,
+    );
   }
 });
 
